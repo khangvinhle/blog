@@ -13,9 +13,11 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password:
+  username: <%= ENV['PRIMARY_DB_USERNAME'] %>
+  password: <%= ENV['PRIMARY_DB_PASSWORD'] %>
+  host: <%= ENV['PRIMARY_DB_HOST'] %>
   socket: /tmp/mysql.sock
+  port: 3306
 
 development:
   <<: *default
@@ -49,7 +51,12 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: blog_production
-  username: blog
-  password: <%= ENV['BLOG_DATABASE_PASSWORD'] %>
+  primary:
+    <<: *default
+    database: <%= ENV['PRIMARY_DB_NAME'] %>
+  replica:
+    <<: *default
+    host: <%= ENV['REPLICA_DB_HOST'] %>
+    database: <%= ENV['REPLICA_DB_NAME'] %>
+    username: <%= ENV['REPLICA_DB_USERNAME'] %>
+    password: <%= ENV['REPLICA_DB_PASSWORD'] %>
