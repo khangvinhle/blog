@@ -20,8 +20,16 @@ default: &default
   port: 3306
 
 development:
-  <<: *default
-  database: blog_development
+  primary:
+    <<: *default
+    database: <%= ENV['PRIMARY_DB_NAME'] %>
+  replica:
+    <<: *default
+    host: <%= ENV['REPLICA_DB_HOST'] %>
+    database: <%= ENV['REPLICA_DB_NAME'] %>
+    username: <%= ENV['REPLICA_DB_USERNAME'] %>
+    password: <%= ENV['REPLICA_DB_PASSWORD'] %>
+    replica: true
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -60,3 +68,4 @@ production:
     database: <%= ENV['REPLICA_DB_NAME'] %>
     username: <%= ENV['REPLICA_DB_USERNAME'] %>
     password: <%= ENV['REPLICA_DB_PASSWORD'] %>
+    replica: true
